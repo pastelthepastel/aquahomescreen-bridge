@@ -1,0 +1,640 @@
+<html>
+	<head>
+	
+		<title>launcher</title>
+	
+		<style>
+		
+			@keyframes launchiconanim {
+				0% {
+					border: #00ffff00 solid 2px;
+				}
+				
+				20% {
+					border: #00ffff00 solid 2px;
+				}
+				
+				60% {
+					border: #00ffff solid 2px;
+				}
+				
+				100% {
+					border: #00ffff00 solid 2px;
+				}
+				
+			}
+		
+			* {
+				font-family:Roboto, Arial;
+				user-select:none;
+				-webkit-tap-highlight-color:transparent;
+			}
+			
+			body {
+				margin:0;
+			}
+			
+			#topbar {
+				width:100%;
+				height:26px;
+				background:linear-gradient(180deg,#dfdfdfe0, #929292e0 50%, #4d4d4de0 calc(50% + 1px), #909090e0 86%, #757575e0 100%);
+				box-shadow:#1f1f1f 0px 1px 0px;
+				/*backdrop-filter:blur(6px);*/
+			}
+			
+			#topbar * {
+				margin-top:4px;
+			}
+			
+			#sliderArea {
+				position:relative;
+				background-color:#00000000;
+				transition:background-color 400ms cubic-bezier(0,1,1,1);
+				left:0;
+				margin-top:2px;
+				width:100%;
+				overflow:hidden;
+				height:64px;
+				padding-bottom:3px;
+				padding-top:3px;
+			}
+			
+			#lockbutton {
+				position:absolute;
+				z-index:10;
+				left:calc(64px - 768px);
+				width:768px;
+				height:64px;
+				background:url("lockbtn.png");
+				filter:drop-shadow(0px 0px 3px black);
+			}
+			
+			#actvArea {
+				position:absolute;
+				top:0;left:0;
+				z-index:-1;
+				width:100%;
+				height:100%;
+				background:linear-gradient(90deg,#00000066, #00000004 128px),linear-gradient(90deg,#00000004 calc(100% - 128px), #00000066 100%);
+				
+			}
+			
+			#actvSlider {
+				position:absolute;
+				display:flex;
+				top:50%
+				transform:translateY(-50%);
+				width:100%;
+				height:300px;
+				overflow-x:scroll;
+				overflow-y:hidden;
+			}
+			
+			#actvSlider .activity {
+				margin:54px 16px 0px 16px;
+				border-radius:192px;
+				max-width:192px;
+				max-height:192px;
+				min-width:192px;
+				min-height:192px;
+				box-shadow:aqua 0px 0px 0px 1px, black 0px 0px 16px;
+				/*background:white;*/
+				box-reflect:below 10px;
+				overflow:hidden;
+			}
+			
+			#actvSlider .activity img {
+				position:absolute;
+				z-index:-2;
+				border-radius:8px;
+			}
+			
+			#buttonsbar {
+				position:absolute;
+				display:flex;
+				transform:translateX(-50%);
+				left:50%;
+				bottom:0;
+				margin-bottom:2px;
+				width:520px;
+				height:26px;
+				flex-grow:1;
+				gap:6px;
+			}
+			
+			.pageBtn {
+				border-radius: 16px;
+				padding:4px;
+				/*background:linear-gradient(180deg,#fcfcfc,#8c8c8c 50%, #3f3f3f calc(50% + 2px), #7c7c7c 88%, #606060);*/
+				background-image:url("ballNormal.png");
+				background-repeat:no-repeat;
+				width:32px;
+				height:16px;
+				/*box-shadow:black 0 0 4px;*/
+				filter:drop-shadow(0px 0px 3px black);
+				transition:background-color 200ms;
+			}
+			
+			#launchDialog {
+				position:absolute;
+				display:none;
+				transform:translate(-50%, -50%);
+				width:640px;
+				height:300px;
+				background:linear-gradient(#ffffff,#a7a7a7dd 50%, #808080dd 50%, #c0c0c0dd 88%, #a7a7a7dd);
+				top:50%;left:50%;
+				border-radius:8px;
+				border:aqua 1px solid;
+				box-shadow:black 0 0 10px 3px;
+				overflow:hidden;
+				z-index:6;
+			}
+			
+			#launchIcon {
+				position:relative;
+				margin-top:22px;
+				margin-left:22px;
+				width:256px;
+				height:256px;
+				box-shadow:black 0 0 10px inset;
+				border-radius:32px;
+				/*background:linear-gradient(#ffffffaa,#ffffff60 50%, #60606006 50%, #60606077);*/
+				background:url("glossLayer.png");
+				animation-name:launchiconanim;
+				animation-duration:2s;
+				animation-iteration-count:infinite;
+				overflow:hidden;
+			}
+			
+			#launchIcon:active {
+				background:linear-gradient(#ffffff44,#ffffff22 50%, #60606000 50%, #60606033);
+			}
+			
+			#launchIcon img {
+				position:absolute;
+				z-index:-1;
+				border-radius:8px;
+				background:white;
+			}
+			
+			#launchLabel {
+				position:relative;
+				font-size:32px;
+				margin-top:22px;
+				min-width:360px;
+				max-width:360px;
+				height:128px;
+			}
+			
+			#launchLabel * {
+				margin-left:22px;
+				margin-top:0;
+				margin-bottom:0;
+				text-shadow:white 0 0 16px;
+			}
+			
+			#launchPkg {
+				font-size:16px;
+			}
+			
+			#diagClose {
+				position:absolute;
+				opacity:0;
+				top:0;left:0;
+				background:pink;
+				width:100%;
+				height:100%;
+				z-index:5;
+			}
+			
+			#cameraButton {
+				position:absolute;
+				right:0;
+				top:0;
+				margin-top:28px;
+				margin-right:2px;
+				background:url("cameraIcon.png");
+				background-size:cover;
+				width:64px;
+				height:64px;
+			}
+			
+			#pageAmountSelect {
+				position:absolute;
+				bottom:0;
+				color:white;
+				margin-left:36px;
+				margin-bottom:4px;
+				text-shadow:#ffffff99 0 0 5px;
+			}
+			
+			#deleteBtn {
+				position:absolute;
+				width:192px;
+				height:32px;
+				background:url("uninstall.png");
+				background-size:cover;
+				bottom:0;
+				margin-bottom:22px;
+				margin-left:calc(256px + 44px);
+				filter:drop-shadow(0px 0px 6px #aa0000cc);
+			}
+			
+			#fadeblack {
+				visibility:hidden;
+				position:absolute;
+				top:0;left:0;
+				transition:all 600ms;
+				background-color:#00000000;
+				width:100%;
+				height:100%;
+				z-index:100;
+			}
+			
+			/*
+				If you don't know what "frutiger aero" is then search it up its rlly cool
+			*/
+			
+		</style>
+		
+	</head>
+	<body>
+		<div id="fadeblack"></div>
+		
+		<div id="topbar"></div>
+		
+		
+		<div id="sliderArea">
+			<div id="lockbutton"></div>
+		</div>
+		
+		
+		<div id="actvArea"></div> <!-- I was originally calling the homescreen icons Activities, so if you see actv or activ or activity then it means icon -->
+		
+		<div id="actvSlider"></div> <!-- the actual place where the icons are, actvArea is mostly for the gradients on the sides of the screen -->
+	
+		<div id="buttonsbar"></div>
+	
+		<a id="pageAmountSelect" href="javascript:localStorage.setItem('appsPerPage',parseInt(window.prompt('how many apps per page? i recommend less than 20 to find stuff easier')));appsPerPage=localStorage.getItem('appsPerPage');window.location.reload()">page length</a>
+	
+		<div id="diagClose"></div>
+	
+		<a href="javascript:Bridge.requestLaunchApp('com.sec.android.app.camera')" id="cameraButton"></a>
+	
+		<div id="launchDialog"> <!-- popup that appears when you tap an icon -->
+		
+			<div id="launchIcon">
+				<img id="launchImg" src="icontest.png" width=256 height=256 />
+			</div>
+		
+			<div id="launchLabel">
+				<p id="launchTitle">Play Store Play Store Play Store Play Store </p> <!-- these are the initial values because I was testing wrapping and stuff -->
+				<p id="launchPkg">com.android.vending</p>
+			</div>
+			
+			<a id="deleteBtn" href="javascript:Bridge.requestAppUninstall(selectedApp)"></a>
+			
+		
+		</div>
+		
+		<script>
+			
+			// this is meant to be used on landscape btw, I have no idea how to force it to be on landscape but yeah
+			// if you like broken ahh pages then feel free to use portrait
+			
+			if(localStorage.length < 1){
+				localStorage.setItem("appsPerPage",15)
+			}
+			
+			var appsPerPage = 15
+			var touchPos = {x:0,y:0}
+			var render3d = true
+			var slideLockEnd = 768
+			
+			document.getElementById("diagClose").style.display = "none"
+			
+			document.body.addEventListener("touchmove",(e)=>{
+				touchPos.x = e.touches[0].clientX
+				touchPos.y = e.touches[0].clientY
+				
+				
+				if (lockBtn.isDragging){
+					if(touchPos.x < slideLockEnd-64){
+						lockBtn.style.marginLeft = touchPos.x-32
+					} else {
+						lockBtn.style.marginLeft = (slideLockEnd-96)+((touchPos.x-(768-64))/6)
+					}
+				}
+			})
+			
+			function enterAppAnim(){ // when you click the app on the popup
+				containerDiv = document.getElementById("fadeblack")
+				
+				containerDiv.style.backgroundColor = "#00000000"
+				containerDiv.style.visibility = "visible"
+				containerDiv.style.transition = "all 300ms"
+				
+				setTimeout(()=>{
+					containerDiv.style.backgroundColor = "#000000FF"
+					
+				},40)
+				
+				setTimeout(()=>{
+					containerDiv.style.backgroundColor = "#00000000"
+					containerDiv.style.visibility = "hidden"
+				},700)
+			
+			}
+			
+			
+			lockBtn = document.getElementById("lockbutton")
+			lockBtn.isDragging = false
+			
+			lockBtn.addEventListener("touchstart",(e)=>{
+				lockBtn.style.transition = ""
+				lockBtn.isDragging = true
+				document.getElementById("sliderArea").style.backgroundColor = "#00000032"
+			})
+			
+			lockBtn.addEventListener("touchend",(e)=>{
+				lockBtn.isDragging = false
+				lockBtn.style.transition = "all 400ms cubic-bezier(0.2, 1, 1, 1)"
+				if(parseInt(lockBtn.style.marginLeft)>slideLockEnd-332){
+					lockBtn.style.marginLeft = (slideLockEnd-64)+window.innerWidth
+					document.getElementById("sliderArea").style.backgroundColor = "#00000066"
+					setTimeout(()=>{Bridge.requestLockScreen();lockBtn.style.marginLeft = "",document.getElementById("sliderArea").style.backgroundColor = "#00000000"},400)
+					
+				} else {
+					document.getElementById("sliderArea").style.backgroundColor = "#00000000"
+					lockBtn.style.marginLeft = ""
+				}
+				
+			})
+			
+			// something random to start with
+			var appsJson = {"apps":[{"packageName":"org.jitsi.meet","label":"Jitsi Meet"},{"packageName":"com.skype.raider","label":"Skype"}]}
+			
+			var pages = []
+			var selectedPage = 0
+			var numberOfPages = 0
+			
+			fetch(Bridge.getAppsURL()).then((resp) => {resp.json().then((thing)=>{
+			
+																							// i am not used to fetch
+				appsPerPage = parseInt(localStorage.getItem("appsPerPage")) 				// 
+				appsJson = thing                                            				// 
+				appsJson.apps.sort()  														// useless but why not leave here, this function runs once anyways
+				numberOfPages = Math.ceil(appsJson.apps.length/appsPerPage)					// calculate how much pages will appear
+				
+				
+				for (i=0;i<numberOfPages;i+=1){												// for each page, add an array with the apps
+																							// 
+					list = appsJson.apps.slice(appsPerPage*i,appsPerPage*i+appsPerPage)		// 
+					pages = pages.concat({"a":list})										// i have no idea of how or if its possible to have an array inside another and got
+				}																			// made fun of for searching on stackoverflow once so this is what came up with.
+																							// 
+				updateActivities()															// after its done fetching the apps, update the homescreen.
+				
+			})})
+			
+			var selectedApp = 0
+			
+			function launchDialog(pkgName,pkgLabel){										// the popup that appears when you tap an icon
+				
+				selectedApp = pkgName
+				
+				lnchDiag = document.getElementById("launchDialog")
+				lnchTitle = document.getElementById("launchTitle")
+				lnchPkg = document.getElementById("launchPkg")
+				lnchIco = document.getElementById("launchImg")
+				
+				lnchTitle.innerText = pkgLabel									// show the title and package name on the popup
+				lnchPkg.innerText = pkgName										// 
+				lnchIco.src = Bridge.getDefaultAppIconURL(pkgName)				// oh and the icon too
+				
+				var scale = 0
+				
+				lnchDiag.style.transition = ""						// this transition is super slow (at least on my phone idk, if you run this on yours pls send vid)
+				lnchDiag.style.width = "640px"						// 
+				lnchDiag.style.height = "0px"						// 
+				
+				persp = 512
+				lnchDiag.style.opacity = "0%"
+				
+				lnchDiag.style.display = "flex"
+				
+				lnchDiag.style.backdropFilter = ""					// <---- laggy hell
+				lnchDiag.style.boxShadow = ""						// <--'
+				
+				transitionTime = 120
+				lnchDiag.style.transition = "all "+transitionTime+"ms ease-out"
+				
+				document.getElementById("diagClose").style.display = ""
+				
+				setTimeout(()=>{ // raaahhh i cant figure out why this is super slow and laggy, anyways this is for the animation
+					
+					lnchDiag.style.height = "330px"
+					lnchDiag.style.opacity = "100%"
+					
+				},2)
+				
+				setTimeout(()=>{
+					lnchDiag.style.height = "300px"
+					render3d = false				// kind of failed attempt to optimize this crap
+					
+				},transitionTime+2)
+				
+				setTimeout(()=>{
+					lnchDiag.style.backdropFilter = "blur(12px)"
+					lnchDiag.style.boxShadow = "black 0 0 10px 3px"
+				},transitionTime+2+transitionTime)
+				
+				document.getElementById("launchIcon").addEventListener("mousedown",()=>{		// to launch the app you have to tap on the icon of the popup
+					enterAppAnim()
+				
+					setTimeout(()=>{
+					Bridge.requestLaunchApp(selectedApp)
+					
+					lnchDiag.style.opacity = "0%"
+					setTimeout(()=>{
+						lnchDiag.style.display = "none"
+						document.getElementById("diagClose").style.display = "none"
+						render3d = true
+					},transitionTime)
+					},680)
+				})
+				
+				/*
+				
+					Today, 01/08/2024 (DD/MM/YYYY), I got some old Windows XP and tech books from my grandma but
+					when I come home I realized I forgot all of them on grandma's couch. I'm so stressed.
+				
+				*/
+				
+				document.getElementById("diagClose").addEventListener("mousedown",()=>{ // a div layered over the homescreen but under the popup
+																						// so that if you tap outside the popup it will close.
+					lnchDiag.style.opacity = "0%"
+					
+					setTimeout(()=>{ 
+						lnchDiag.style.display = "none"
+						document.getElementById("diagClose").style.display = "none"
+						render3d = true
+					},transitionTime)
+					
+				})
+				
+			}
+			
+			/*
+				
+			*/
+			
+			function updateActivities(){
+			
+				lengthThing = document.getElementById("actvSlider").children.length // I don't know how to make good variable names.
+				
+				for(i=0;i<lengthThing;i+=1){
+					document.getElementById("actvSlider").children[0].remove() // delete every blob/tile/icon from the list
+				}
+				
+				spacer = document.createElement("div") // spacer before the apps so the first one appear centered and not on the left
+				spacer.style.minWidth = "368px"
+				spacer.style.height = "100%"
+				document.getElementById("actvSlider").appendChild(spacer)
+				
+				lengthThing = document.getElementsByClassName("activity").length // update it so that the spacers don't count
+				
+				for(i=0;i<pages[selectedPage].a.length;i+=1){ // create the icons/blobs
+
+					root = document.getElementById("actvSlider") 
+					tile = document.createElement("a")
+					tile.className = "activity"
+					tile.href = "javascript:launchDialog('"+pages[selectedPage]["a"][i].packageName+"','"+pages[selectedPage]["a"][i].label+"')"
+					tileThumb = document.createElement("img")
+					tileThumb.src = Bridge.getDefaultAppIconURL(pages[selectedPage]["a"][i].packageName)
+					tileThumb.width = 192
+					tileThumb.height = 192
+					
+					tileThumb.style.position = "absolute"
+					tileThumb.style.zIndex = "-2"
+					
+					imgWrapper = document.createElement("div") // this is just an overlay for the bubble thing over the icons
+					imgWrapper.style = "position:absolute;width:192px;height:192px;background:url(\"iconMask.png\");background-size:cover;"
+					
+					imgWrapper.appendChild(tileThumb)
+					tile.appendChild(imgWrapper)
+					tile.style.marginTop = "-256px" // this is for the animation of the icons falling
+					tile.style.background = "url(\""+Bridge.getDefaultAppIconURL(pages[selectedPage]["a"][i].packageName)+"\")" // this background is just to fill
+					tile.style.backgroundSize = "209px 209px"
+					tile.style.backgroundPosition = "center"
+					root.appendChild(tile)
+				}
+				
+				lengthThing = document.getElementsByClassName("activity").length //update the length after creating all the icons/blobs
+				
+				setTimeout(()=>{ // the falling animation, as mentioned above
+					for(i=0;i<lengthThing;i+=1){
+						dathing = document.getElementsByClassName("activity")[i]
+						
+						dathing.style.transition = "margin-top 200ms"
+						dathing.style.marginTop = ""
+					}
+				},200)
+				
+				spacer = document.createElement("div") // another spacer, this time for the end
+				spacer.style.minWidth = "368px"
+				spacer.style.height = "100%"
+				document.getElementById("actvSlider").appendChild(spacer)
+				
+				childcount = document.getElementById("buttonsbar").children.length // the buttons on the bottom to select the pages
+				
+				for(i=0;i<childcount;i+=1){ // clear the old ones (if any)
+					document.getElementById("buttonsbar").children[0].remove()
+				}
+				
+				for (i=0;i<numberOfPages;i+=1){ // add them again (this is done in every update so that the selected one is blue)
+					btnElem = document.createElement("a")
+					btnElem.innerText = ""
+					btnElem.className = "pageBtn"
+					if(selectedPage==i){
+						btnElem.style.background = "url(\"ballActive.png\")"
+						btnElem.style.marginBottom = "6px"
+					} else {
+						btnElem.style.background = "url(\"ballNormal.png\")"
+					}
+					
+					btnElem.style.backgroundRepeat = "no-repeat"
+					btnElem.href = "javascript:selectedPage="+i+";updateActivities()"
+					document.getElementById("buttonsbar").appendChild(btnElem)
+				}
+			};
+			
+			var xdeg = 0
+			var zdeg = 0
+			
+			var xinc = 0
+			var zinc = 0
+			
+			function calc3d(){ // this is for the 3d effect
+			
+			if(render3d){
+				xinc += 0.01
+				zinc += 0.007
+			}
+			
+			
+			for(i=0;i<document.getElementsByClassName("activity").length;i+=1){
+			
+				xofthis = document.getElementsByClassName("activity")[i].getBoundingClientRect().x+64
+				
+				if (xofthis < window.innerWidth+76){
+					if(xofthis>-192){ // don't do 3d if it's not on the screen area for better performance
+						yofthis = document.getElementsByClassName("activity")[i].getBoundingClientRect().y
+						howCloseToRight = xofthis/window.innerWidth
+						
+						maxdeg = 60
+						maxscale = 0.2
+						
+						if(render3d){						
+							xdeg = Math.sin(xinc)*11		// YIIPPPEEEEEEEE
+							zdeg = Math.sin(zinc)/2			//
+						}
+					
+						scale = Math.abs(((howCloseToRight * maxscale*2)-maxscale))+1
+						if(scale>2){
+							scale = 1
+						}
+						
+						deg = (howCloseToRight * (maxdeg*-2))+maxdeg
+						document.getElementsByClassName("activity")[i].style.transform = "perspective(512px) rotateY("+deg*1.2+"deg) rotateX("+xdeg+"deg) rotateZ("+zdeg+"deg) scale("+scale+")"
+						document.getElementsByClassName("activity")[i].style.visibility = ""						
+					}
+				} else { // hide the icons outside screen area
+					document.getElementsByClassName("activity")[i].style.visibility = "hidden"
+					document.getElementsByClassName("activity")[i].style.transform = "perspective(512px) rotateY(60deg) rotateX(0deg) rotateZ(0deg) scale(1.2)"
+				}
+			}
+			
+			};calc3d()
+			
+			setInterval(calc3d,1000/60)
+			
+			document.getElementById("deleteBtn").addEventListener("touchstart",()=>{ // effects for the uninstall button on the icon popup 
+				document.getElementById("deleteBtn").style.filter = "brightness(0.5)"
+			})
+			
+			document.getElementById("deleteBtn").addEventListener("touchend",()=>{
+				document.getElementById("deleteBtn").style.filter = ""
+			})
+			
+			/*
+			
+				my left eye has an infection rn and i'm going to the doctor in like 30 minutes at the time im writing this.
+				it sucks to wait on a depressive and boring room for almost an hour just to get eye drops.
+				this has nothing to do with the code by the way
+			
+			*/
+			
+		</script>
+	</body>
+</html>
